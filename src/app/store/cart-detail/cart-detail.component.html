@@ -1,5 +1,76 @@
-<div>
-  <h3 class="bg-info p-1 text-white">
-      Détail du panier
-  </h3>
+<div class="container-fluid">
+  <div class="row">
+      <div class="bg-dark text-white p-2">
+          <span class="navbar-brand ml-2">BOUTIQUE SPORT</span>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col mt-2">
+          <h2 class="text-center">Votre Panier</h2>
+          <table class="table table-bordered table-striped p-2">
+              <thead>
+                  <tr>
+                      <th>Quantité</th>
+                      <th>Produit</th>
+                      <th class="text-end">Prix</th>
+                      <th class="text-end">Sous-total</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  <tr *ngIf="cart.lines().length == 0">
+                      <td colspan="4" class="text-center">
+                          Votre panier est vide
+                      </td>
+                  </tr>
+                  <tr *ngFor="let line of cart.lines()">
+                      <td>
+                          <input type="number" class="form-control-sm"
+                              style="width:5em" [value]="line.quantity"
+                              (change)="cart.updateQuantity(line.product,
+                                $any($event).target.value)" />
+                      </td>
+                      <td>{{line.product.name}}</td>
+                      <td class="text-end">
+                          {{line.product.price
+                              | currency:"CAD":"symbol":"2.2-2"}}
+                      </td>
+                      <td class="text-end">
+                          {{(line.lineTotal)
+                              | currency:"CAD":"symbol":"2.2-2" }}
+                      </td>
+                      <td class="text-center">
+                          <button class="btn btn-sm btn-danger"
+                              (click)=
+                              "cart.removeLine(line.product.id ?? 0)">
+                              Retirer
+                          </button>
+                      </td>
+                  </tr>
+              </tbody>
+              <tfoot>
+                  <tr>
+                      <td colspan="3" class="text-end">Total:</td>
+                      <td class="text-end">
+                          {{cart.summary().cartPrice
+                              | currency:"CAD":"symbol":"2.2-2"}}
+                      </td>
+                  </tr>
+              </tfoot>
+          </table>
+      </div>
+  </div>
+  <div class="row">
+      <div class="col">
+          <div class="text-center">
+              <button class="btn btn-primary m-1" routerLink="/store">
+                  Continuer de magasiner
+              </button>
+              <button class="btn btn-secondary m-1"
+                      routerLink="/checkout"
+                      [disabled]="cart.lines().length == 0">
+                  Passer à la caisse
+              </button>
+          </div>
+      </div>
+  </div>
 </div>
